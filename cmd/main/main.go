@@ -1,6 +1,8 @@
 package main
 
-import "github.com/ArtificialLegacy/gm-proj-tool/pkg/yyp"
+import (
+	"github.com/ArtificialLegacy/gm-proj-tool/pkg/yyp"
+)
 
 const TEST_DIR = "gm-proj-tool-testing"
 
@@ -10,10 +12,20 @@ func main() {
 		panic(err)
 	}
 
-	err = proj.DataLoad()
+	note := yyp.NewNote("Note2", "test", proj.AsParent())
+
+	err = proj.ImportResource(note)
 	if err != nil {
 		panic(err)
 	}
 
-	println(proj.Data.Name)
+	err = proj.DataSave()
+	if err != nil {
+		panic(err)
+	}
+
+	err = proj.OrderSave()
+	if err != nil {
+		panic(err)
+	}
 }

@@ -5,18 +5,26 @@ type ProjectData struct {
 	ResourceVersion string `json:"resourceVersion"`
 	Name            string `json:"name"`
 
+	AudioGroups []ProjectAudioGroup `json:"AudioGroups"`
+
+	Configs           ProjectConfig `json:"configs"`
+	DefaultScriptType int           `json:"defaultScriptType"`
+
+	Folders       []ProjectFolder       `json:"Folders"`
+	IncludedFiles []ProjectIncludedFile `json:"IncludedFiles"`
+
+	IsEcma bool `json:"isEcma"`
+
+	LibraryEmitters []ProjectLibraryEmitters `json:"LibraryEmitters"`
+
 	MetaData ProjectMetaData `json:"MetaData"`
 
-	DefaultScriptType int  `json:"defaultScriptType"`
-	IsEcma            bool `json:"isEcma"`
+	Resources []ProjectResource  `json:"resources"`
+	RoomOrder []ProjectRoomOrder `json:"RoomOrderNodes"`
 
-	Folders         []string `json:"Folders"`
-	IncludedFiles   []string `json:"IncludedFiles"`
-	LibraryEmitters []string `json:"LibraryEmitters"`
+	TemplateType string `json:"templateType"`
 
-	AudioGroups []ProjectAudioGroup `json:"AudioGroups"`
-	Resources   []ProjectResource   `json:"Resources"`
-	RoomOrder   []ProjectRoomOrder  `json:"RoomOrderNodes"`
+	TextureGroups []ProjectTextureGroups `json:"TextureGroups"`
 }
 
 type ProjectMetaData struct {
@@ -31,17 +39,21 @@ type ProjectAudioGroup struct {
 }
 
 type ProjectResource struct {
-	ID struct {
-		Name string `json:"name"`
-		Path string `json:"path"`
-	} `json:"id"`
+	ID ProjectResourceNode `json:"id"`
+}
+
+type ProjectResourceNode struct {
+	Name string `json:"name"`
+	Path string `json:"path"`
 }
 
 type ProjectRoomOrder struct {
-	RoomID struct {
-		Name string `json:"name"`
-		Path string `json:"path"`
-	} `json:"roomId"`
+	RoomID ProjectRoomOrderNode `json:"roomId"`
+}
+
+type ProjectRoomOrderNode struct {
+	Name string `json:"name"`
+	Path string `json:"path"`
 }
 
 type ProjectTextureGroups struct {
@@ -60,6 +72,32 @@ type ProjectTextureGroups struct {
 }
 
 type TextureGroupParent struct {
+	Name string `json:"name"`
+	Path string `json:"path"`
+}
+
+type ProjectFolder struct {
+	ResourceType    string   `json:"resourceType"`
+	ResourceVersion string   `json:"resourceVersion"`
+	Name            string   `json:"name"`
+	FolderPath      string   `json:"folderPath"`
+	Tags            []string `json:"tags,omitempty"`
+}
+
+type ProjectIncludedFile struct {
+	ResourceType    string `json:"resourceType"`
+	ResourceVersion string `json:"resourceVersion"`
+	Name            string `json:"name"`
+	CopyToMask      int    `json:"CopyToMask"`
+	FilePath        string `json:"filePath"`
+}
+
+type ProjectConfig struct {
+	Children []ProjectConfig `json:"children"`
+	Name     string          `json:"name"`
+}
+
+type ProjectLibraryEmitters struct {
 	Name string `json:"name"`
 	Path string `json:"path"`
 }
