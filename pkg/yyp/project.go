@@ -15,9 +15,14 @@ type Project struct {
 	ResourceOrder *ProjectOrder
 }
 
-type ResourceParent struct {
+type ProjectResourceNode struct {
 	Name string `json:"name"`
 	Path string `json:"path"`
+}
+
+type ProjectResourceBasic struct {
+	ResourceType    ResourceType `json:"resourceType"`
+	ResourceVersion Version      `json:"resourceVersion"`
 }
 
 func NewProject(path string) (*Project, error) {
@@ -39,20 +44,16 @@ func NewProject(path string) (*Project, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = proj.OrderLoad()
-	if err != nil {
-		return nil, err
-	}
 
 	return proj, nil
 }
 
-func (p *Project) AsParent() ResourceParent {
+func (p *Project) AsParent() ProjectResourceNode {
 	if p.Data == nil {
-		return ResourceParent{}
+		return ProjectResourceNode{}
 	}
 
-	return ResourceParent{
+	return ProjectResourceNode{
 		Name: p.Data.Name,
 		Path: p.Data.Name + EXT_PROJ,
 	}
@@ -141,15 +142,12 @@ func (p *Project) ResourceList(dir string) []string {
 }
 
 type ImportableResource interface {
-	Save(pdir string) (string, string, *ResourceParent, error)
+	Save(pdir string) (string, string, *ProjectResourceNode, error)
 }
 
 func (p *Project) ImportResource(res ImportableResource) error {
 	if p.Data == nil {
 		return fmt.Errorf("project data must not be nil")
-	}
-	if p.ResourceOrder == nil {
-		return fmt.Errorf("project resource order must not be nil")
 	}
 
 	name, d, _, err := res.Save(p.Path)
@@ -162,12 +160,6 @@ func (p *Project) ImportResource(res ImportableResource) error {
 			Name: name,
 			Path: d,
 		},
-	})
-
-	p.ResourceOrder.ResourceOrderSettings = append(p.ResourceOrder.ResourceOrderSettings, ProjectResourceOrderSettings{
-		Name:  name,
-		Order: 0,
-		Path:  d,
 	})
 
 	return nil

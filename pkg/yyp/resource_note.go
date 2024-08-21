@@ -12,24 +12,17 @@ type Note struct {
 	Resource *ResourceNote
 }
 
-type ResourceNote struct {
-	ResourceType    string         `json:"resourceType"`
-	ResourceVersion string         `json:"resourceVersion"`
-	Name            string         `json:"name"`
-	Parent          ResourceParent `json:"parent"`
-	Tags            []string       `json:"tags,omitempty"`
-}
-
-func NewResourceNote(name string, parent ResourceParent) *ResourceNote {
+func NewResourceNote(name string, parent ProjectResourceNode) *ResourceNote {
 	return &ResourceNote{
 		ResourceType:    RESTYPE_NOTE,
 		ResourceVersion: VERSION_NOTE,
-		Name:            name,
-		Parent:          parent,
+
+		Name:   name,
+		Parent: parent,
 	}
 }
 
-func NewNote(name, text string, parent ResourceParent) *Note {
+func NewNote(name, text string, parent ProjectResourceNode) *Note {
 	return &Note{
 		Name:     name,
 		Text:     text,
@@ -37,12 +30,12 @@ func NewNote(name, text string, parent ResourceParent) *Note {
 	}
 }
 
-func (n *Note) Save(pdir string) (string, string, *ResourceParent, error) {
+func (n *Note) Save(pdir string) (string, string, *ProjectResourceNode, error) {
 	d := path.Join(pdir, DIR_NOTE, n.Name)
 
 	f, err := os.Stat(d)
 	if err != nil {
-		err := os.Mkdir(d, 0o666)
+		err := os.Mkdir(d, 0o777)
 		if err != nil {
 			return "", "", nil, err
 		}
@@ -100,4 +93,12 @@ func (p *Project) NoteLoad(name string) (*Note, error) {
 		Resource: data,
 	}
 	return note, nil
+}
+
+type ResourceNote struct {
+	ResourceType    ResourceType        `json:"resourceType"`
+	ResourceVersion Version             `json:"resourceVersion"`
+	Name            string              `json:"name"`
+	Parent          ProjectResourceNode `json:"parent"`
+	Tags            []string            `json:"tags,omitempty"`
 }

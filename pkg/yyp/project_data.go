@@ -1,9 +1,9 @@
 package yyp
 
 type ProjectData struct {
-	ResourceType    string `json:"resourceType"`
-	ResourceVersion string `json:"resourceVersion"`
-	Name            string `json:"name"`
+	ResourceType    ResourceType `json:"resourceType"`
+	ResourceVersion Version      `json:"resourceVersion"`
+	Name            string       `json:"name"`
 
 	AudioGroups []ProjectAudioGroup `json:"AudioGroups"`
 
@@ -22,7 +22,7 @@ type ProjectData struct {
 	Resources []ProjectResource  `json:"resources"`
 	RoomOrder []ProjectRoomOrder `json:"RoomOrderNodes"`
 
-	TemplateType string `json:"templateType"`
+	TemplateType TemplateType `json:"templateType"`
 
 	TextureGroups []ProjectTextureGroups `json:"TextureGroups"`
 }
@@ -32,64 +32,56 @@ type ProjectMetaData struct {
 }
 
 type ProjectAudioGroup struct {
-	ResourceType    string `json:"resourceType"`
-	ResourceVersion string `json:"resourceVersion"`
-	Name            string `json:"name"`
-	Targets         int    `json:"targets"`
+	ResourceType    ResourceType `json:"resourceType"`
+	ResourceVersion Version      `json:"resourceVersion"`
+	Name            string       `json:"name"`
+	Targets         int          `json:"targets"`
 }
 
 type ProjectResource struct {
 	ID ProjectResourceNode `json:"id"`
 }
 
-type ProjectResourceNode struct {
-	Name string `json:"name"`
-	Path string `json:"path"`
-}
-
 type ProjectRoomOrder struct {
-	RoomID ProjectRoomOrderNode `json:"roomId"`
-}
-
-type ProjectRoomOrderNode struct {
-	Name string `json:"name"`
-	Path string `json:"path"`
+	RoomID ProjectResourceNode `json:"roomId"`
 }
 
 type ProjectTextureGroups struct {
-	ResourceType    string             `json:"resourceType"`
-	ResourceVersion string             `json:"resourceVersion"`
-	Name            string             `json:"name"`
-	Autocrop        bool               `json:"autocrop"`
-	Border          int                `json:"border"`
-	CompressFormat  string             `json:"compressFormat"`
-	Directory       string             `json:"directory"`
-	GroupParent     TextureGroupParent `json:"groupParent"`
-	IsScaled        bool               `json:"isScaled"`
-	LoadType        string             `json:"loadType"`
-	MipsToGenerate  int                `json:"mipsToGenerate"`
-	Targets         int                `json:"targets"`
+	ResourceType    ResourceType            `json:"resourceType"`
+	ResourceVersion Version                 `json:"resourceVersion"`
+	Name            string                  `json:"name"`
+	Autocrop        bool                    `json:"autocrop"`
+	Border          int                     `json:"border"`
+	CompressFormat  TextureGroupCompression `json:"compressFormat"`
+	Directory       string                  `json:"directory"`
+	GroupParent     ProjectResourceNode     `json:"groupParent"`
+	IsScaled        bool                    `json:"isScaled"`
+	LoadType        TextureGroupType        `json:"loadType"`
+	MipsToGenerate  int                     `json:"mipsToGenerate"`
+	Targets         int                     `json:"targets"`
 }
 
-type TextureGroupParent struct {
-	Name string `json:"name"`
-	Path string `json:"path"`
+func ProjectTextureGroupDefaultID() ProjectResourceNode {
+	return ProjectResourceNode{
+		Name: "Default",
+		Path: "texturegroups/Default",
+	}
 }
 
 type ProjectFolder struct {
-	ResourceType    string   `json:"resourceType"`
-	ResourceVersion string   `json:"resourceVersion"`
-	Name            string   `json:"name"`
-	FolderPath      string   `json:"folderPath"`
-	Tags            []string `json:"tags,omitempty"`
+	ResourceType    ResourceType `json:"resourceType"`
+	ResourceVersion Version      `json:"resourceVersion"`
+	Name            string       `json:"name"`
+	FolderPath      string       `json:"folderPath"`
+	Tags            []string     `json:"tags,omitempty"`
 }
 
 type ProjectIncludedFile struct {
-	ResourceType    string `json:"resourceType"`
-	ResourceVersion string `json:"resourceVersion"`
-	Name            string `json:"name"`
-	CopyToMask      int    `json:"CopyToMask"`
-	FilePath        string `json:"filePath"`
+	ResourceType    ResourceType `json:"resourceType"`
+	ResourceVersion Version      `json:"resourceVersion"`
+	Name            string       `json:"name"`
+	CopyToMask      int          `json:"CopyToMask"`
+	FilePath        string       `json:"filePath"`
 }
 
 type ProjectConfig struct {
@@ -101,3 +93,5 @@ type ProjectLibraryEmitters struct {
 	Name string `json:"name"`
 	Path string `json:"path"`
 }
+
+type ProjectEmpty struct{}
