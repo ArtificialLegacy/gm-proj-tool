@@ -1,8 +1,6 @@
 package main
 
 import (
-	"image"
-
 	"github.com/ArtificialLegacy/gm-proj-tool/pkg/yyp"
 )
 
@@ -21,7 +19,7 @@ func main() {
 		panic(err)
 	}
 
-	sprite, err := yyp.NewSprite("GoSprite1", proj.AsParent(), yyp.ProjectTextureGroupDefaultID(), 16, 16,
+	/*sprite, err := yyp.NewSprite("GoSprite1", proj.AsParent(), yyp.ProjectTextureGroupDefaultID(), 16, 16,
 		[]yyp.SpriteLayer{
 			{
 				Name: yyp.SPRITELAYER_DEFAULTNAME,
@@ -36,6 +34,11 @@ func main() {
 				},
 			},
 		})
+	if err != nil {
+		panic(err)
+	}*/
+
+	sprite, err := proj.SpriteLoad("GoSprite1")
 	if err != nil {
 		panic(err)
 	}

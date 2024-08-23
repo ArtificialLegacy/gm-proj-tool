@@ -1,6 +1,7 @@
 package yyp
 
 import (
+	"bytes"
 	"fmt"
 	"image"
 	"image/draw"
@@ -125,8 +126,8 @@ func (s *Sprite) Save(pdir string) (string, string, *ProjectResourceNode, error)
 		}
 	}
 
-	if _, err := os.Stat(path.Join(d, "layers")); err == nil {
-		os.RemoveAll(path.Join(d, "layers"))
+	if _, err := os.Stat(path.Join(d, DIR_IMAGELAYERS)); err == nil {
+		os.RemoveAll(path.Join(d, DIR_IMAGELAYERS))
 	}
 
 	fl, _ := os.ReadDir(d)
@@ -147,7 +148,7 @@ func (s *Sprite) Save(pdir string) (string, string, *ProjectResourceNode, error)
 		layerName := layerNames[li]
 		for fi, frame := range layer.Frames {
 			frameResource := s.Resource.Frames[fi]
-			layerDir := path.Join(d, "layers", frameResource.Name)
+			layerDir := path.Join(d, DIR_IMAGELAYERS, frameResource.Name)
 			err := os.MkdirAll(layerDir, 0o777)
 			if err != nil {
 				return "", "", nil, err
@@ -167,7 +168,7 @@ func (s *Sprite) Save(pdir string) (string, string, *ProjectResourceNode, error)
 				bases = append(bases, frame)
 			} else if fi < len(bases) {
 				base := bases[fi]
-				draw.Draw(frame, frame.Bounds(), base, base.Bounds().Min, draw.Src)
+				draw.Draw(frame, frame.Bounds(), base, base.Bounds().Min, draw.Over)
 				bases[fi] = frame
 			}
 		}
@@ -213,6 +214,128 @@ func flattenLayers(layers []SpriteLayer, resourceLayers []ResourceImageLayer) ([
 	}
 
 	return out, names
+}
+
+func (p *Project) SpriteLoad(name string) (*Sprite, error) {
+	pth := path.Join(p.Path, DIR_SPRITE, name)
+
+	fs, err := os.Stat(pth)
+	if err != nil {
+		return nil, err
+	}
+	if !fs.IsDir() {
+		return nil, fmt.Errorf("resource %s is not a directory", fs.Name())
+	}
+
+	data := &ResourceSprite{}
+	err = loadJSON(path.Join(pth, name+EXT_RESOURCE), data)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing sprite json: %s", err)
+	}
+
+	if data.ResourceVersion != VERSION_SPRITE {
+		return nil, fmt.Errorf("resource version is unsupported: %s, expected %s", data.ResourceVersion, VERSION_SPRITE)
+	}
+	if data.ResourceType != RESTYPE_SPRITE {
+		return nil, fmt.Errorf("resource is of incorrect type: %s, expected %s", data.ResourceType, RESTYPE_SPRITE)
+	}
+
+	if data.Type != SPRITETYPE_BITMAP {
+		return nil, fmt.Errorf("sprite is of unsupported type: %d, expected %d", data.Type, SPRITETYPE_BITMAP)
+	}
+
+	frameList := make([]string, len(data.Frames))
+
+	for i, f := range data.Frames {
+		if f.ResourceVersion != VERSION_SPRITEFRAME {
+			return nil, fmt.Errorf("resource version is unsupported: %s, expected %s", f.ResourceVersion, VERSION_SPRITEFRAME)
+		}
+		if f.ResourceType != RESTYPE_SPRITEFRAME {
+			return nil, fmt.Errorf("resource is of incorrect type: %s, expected %s", f.ResourceType, RESTYPE_SPRITEFRAME)
+		}
+
+		frameList[i] = f.Name
+	}
+
+	sprite := Sprite{
+		Name:     data.Name,
+		Resource: data,
+	}
+
+	for _, l := range data.Layers {
+		err := verifyLayers(l, &sprite.Layers, pth, frameList)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &sprite, nil
+}
+
+func verifyLayers(layer ResourceImageLayer, layerList *[]SpriteLayer, pth string, frames []string) error {
+	if layer.ResourceType == RESTYPE_IMAGEFOLDERLAYER {
+		if layer.ResourceVersion != VERSION_IMAGEFOLDER {
+			return fmt.Errorf("resource version is unsupported: %s, expected %s", layer.ResourceVersion, VERSION_IMAGEFOLDER)
+		}
+
+		folderLayer := SpriteLayer{
+			Name:   layer.Name,
+			Layers: []SpriteLayer{},
+		}
+
+		*layerList = append(*layerList, folderLayer)
+
+		for _, l := range layer.Layers {
+			err := verifyLayers(l, &folderLayer.Layers, pth, frames)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	}
+
+	if layer.ResourceVersion != VERSION_IMAGELAYER {
+		return fmt.Errorf("resource version is unsupported: %s, expected %s", layer.ResourceVersion, VERSION_IMAGELAYER)
+	}
+	if layer.ResourceType != RESTYPE_IMAGELAYER {
+		return fmt.Errorf("resource is of incorrect type: %s, expected %s", layer.ResourceType, RESTYPE_IMAGELAYER)
+	}
+
+	layerFrame := SpriteLayer{
+		Name:   layer.Name,
+		Frames: make([]*image.NRGBA, len(frames)),
+	}
+
+	for i, f := range frames {
+		fdir := path.Join(pth, DIR_IMAGELAYERS, f)
+
+		fd, err := os.Stat(fdir)
+		if err != nil {
+			return fmt.Errorf("failed to find sprite layer images, %s", err)
+		}
+		if !fd.IsDir() {
+			return fmt.Errorf("frame layer path is not a directory, %s", fd.Name())
+		}
+
+		b, err := os.ReadFile(path.Join(fdir, layer.Name+".png"))
+		if err != nil {
+			return fmt.Errorf("failed to read sprite layer image, %s", err)
+		}
+
+		img, err := png.Decode(bytes.NewReader(b))
+		if err != nil {
+			return fmt.Errorf("failed to decode sprite layer image, %s", err)
+		}
+
+		bounds := img.Bounds()
+		m := image.NewNRGBA(image.Rect(0, 0, bounds.Dx(), bounds.Dy()))
+		draw.Draw(m, m.Bounds(), img, bounds.Min, draw.Src)
+		layerFrame.Frames[i] = m
+	}
+
+	*layerList = append(*layerList, layerFrame)
+	return nil
 }
 
 type ResourceSprite struct {
