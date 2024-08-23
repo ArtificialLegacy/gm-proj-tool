@@ -136,7 +136,7 @@ func (s *Sprite) Save(pdir string) (string, string, *ProjectResourceNode, error)
 			continue
 		}
 
-		if path.Ext(fli.Name()) == ".png" {
+		if path.Ext(fli.Name()) == EXT_SPRITE {
 			os.Remove(path.Join(d, fli.Name()))
 		}
 	}
@@ -154,7 +154,7 @@ func (s *Sprite) Save(pdir string) (string, string, *ProjectResourceNode, error)
 				return "", "", nil, err
 			}
 
-			ff, err := os.OpenFile(path.Join(layerDir, layerName+".png"), os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0o666)
+			ff, err := os.OpenFile(path.Join(layerDir, layerName+EXT_SPRITE), os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0o666)
 			if err != nil {
 				return "", "", nil, err
 			}
@@ -177,7 +177,7 @@ func (s *Sprite) Save(pdir string) (string, string, *ProjectResourceNode, error)
 	for bi, base := range bases {
 		frameResource := s.Resource.Frames[bi]
 
-		ff, err := os.OpenFile(path.Join(d, frameResource.Name+".png"), os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0o666)
+		ff, err := os.OpenFile(path.Join(d, frameResource.Name+EXT_SPRITE), os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0o666)
 		if err != nil {
 			return "", "", nil, err
 		}
@@ -318,7 +318,7 @@ func verifyLayers(layer ResourceImageLayer, layerList *[]SpriteLayer, pth string
 			return fmt.Errorf("frame layer path is not a directory, %s", fd.Name())
 		}
 
-		b, err := os.ReadFile(path.Join(fdir, layer.Name+".png"))
+		b, err := os.ReadFile(path.Join(fdir, layer.Name+EXT_SPRITE))
 		if err != nil {
 			return fmt.Errorf("failed to read sprite layer image, %s", err)
 		}

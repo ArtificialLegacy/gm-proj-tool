@@ -10,8 +10,8 @@ type ProjectData struct {
 	Configs           ProjectConfig `json:"configs"`
 	DefaultScriptType int           `json:"defaultScriptType"`
 
-	Folders       []ProjectFolder       `json:"Folders"`
-	IncludedFiles []ProjectIncludedFile `json:"IncludedFiles"`
+	Folders       []ProjectFolder        `json:"Folders"`
+	IncludedFiles []ResourceIncludedFile `json:"IncludedFiles"`
 
 	IsEcma bool `json:"isEcma"`
 
@@ -74,14 +74,6 @@ type ProjectFolder struct {
 	Name            string       `json:"name"`
 	FolderPath      string       `json:"folderPath"`
 	Tags            []string     `json:"tags,omitempty"`
-}
-
-type ProjectIncludedFile struct {
-	ResourceType    ResourceType `json:"resourceType"`
-	ResourceVersion Version      `json:"resourceVersion"`
-	Name            string       `json:"name"`
-	CopyToMask      int          `json:"CopyToMask"`
-	FilePath        string       `json:"filePath"`
 }
 
 type ProjectConfig struct {

@@ -69,6 +69,7 @@ const EXT_SCRIPT = ".gml"
 const EXT_SHADER_VERTEX = ".vsh"
 const EXT_SHADER_FRAGMENT = ".fsh"
 const EXT_NOTE = ".txt"
+const EXT_SPRITE = ".png"
 
 // project options directories
 const OPT = "options"

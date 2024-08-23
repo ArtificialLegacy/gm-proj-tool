@@ -64,6 +64,19 @@ func main() {
 		panic(err)
 	}
 
+	//data := []byte("test")
+	//includedFile := yyp.NewIncludedFile("GoIncludedFile.txt", yyp.INCLUDEDFILE_DEFAULTPATH, &data)
+
+	includedFile, err := proj.IncludedFileLoad(yyp.INCLUDEDFILE_DEFAULTPATH, "GoIncludedFile.txt")
+	if err != nil {
+		panic(err)
+	}
+
+	err = proj.IncludedFileSave(includedFile)
+	if err != nil {
+		panic(err)
+	}
+
 	err = proj.DataSave()
 	if err != nil {
 		panic(err)
