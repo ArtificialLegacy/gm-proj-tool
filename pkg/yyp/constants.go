@@ -117,6 +117,7 @@ const (
 	RESTYPE_KEYFRAMESTORE_SPRITEKEYFRAME ResourceType = "KeyframeStore<SpriteFrameKeyframe>"
 	RESTYPE_KEYFRAME_SPRITEKEYFRAME      ResourceType = "Keyframe<SpriteFrameKeyframe>"
 	RESTYPE_SPRITEKEYFRAME               ResourceType = "SpriteFrameKeyFrame"
+	RESTYPE_SCRIPT                       ResourceType = "GMScript"
 )
 
 type ScriptType int

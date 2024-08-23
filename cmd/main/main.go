@@ -48,6 +48,22 @@ func main() {
 		panic(err)
 	}
 
+	/*script := yyp.NewScript("GoScript1", `
+	function test() {
+		// test script
+	}
+	`, proj.AsParent())*/
+
+	script, err := proj.ScriptLoad("GoScript1")
+	if err != nil {
+		panic(err)
+	}
+
+	err = proj.ImportResource(script)
+	if err != nil {
+		panic(err)
+	}
+
 	err = proj.DataSave()
 	if err != nil {
 		panic(err)
