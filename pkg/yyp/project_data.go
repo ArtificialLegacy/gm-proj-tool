@@ -10,7 +10,7 @@ type ProjectData struct {
 	Configs           ProjectConfig `json:"configs"`
 	DefaultScriptType int           `json:"defaultScriptType"`
 
-	Folders       []ProjectFolder        `json:"Folders"`
+	Folders       []ResourceFolder       `json:"Folders"`
 	IncludedFiles []ResourceIncludedFile `json:"IncludedFiles"`
 
 	IsEcma bool `json:"isEcma"`
@@ -66,14 +66,6 @@ func ProjectTextureGroupDefaultID() ProjectResourceNode {
 		Name: "Default",
 		Path: "texturegroups/Default",
 	}
-}
-
-type ProjectFolder struct {
-	ResourceType    ResourceType `json:"resourceType"`
-	ResourceVersion Version      `json:"resourceVersion"`
-	Name            string       `json:"name"`
-	FolderPath      string       `json:"folderPath"`
-	Tags            []string     `json:"tags,omitempty"`
 }
 
 type ProjectConfig struct {

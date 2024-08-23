@@ -60,6 +60,7 @@ const DIR_TIMELINE = "timelines"
 const DIR_DATAFILE = "datafiles"
 const DIR_PARTICLELIB = "particlelib"
 const DIR_IMAGELAYERS = "layers"
+const DIR_FOLDER = "folders"
 
 // project file extensions
 const EXT_PROJ = ".yyp"
