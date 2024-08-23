@@ -155,6 +155,12 @@ func (p *Project) ImportResource(res ImportableResource) error {
 		return fmt.Errorf("failed to save resource: %s", err)
 	}
 
+	for _, r := range p.Data.Resources {
+		if r.ID.Name == name && r.ID.Path == d {
+			return nil // resource already exists so return early
+		}
+	}
+
 	p.Data.Resources = append(p.Data.Resources, ProjectResource{
 		ID: ProjectResourceNode{
 			Name: name,

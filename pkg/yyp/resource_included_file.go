@@ -13,13 +13,13 @@ type IncludedFile struct {
 	Resource *ResourceIncludedFile
 }
 
-func NewIncludedFile(name, filepath string, data *[]byte) *IncludedFile {
+func NewIncludedFile(filepath, name string, data *[]byte) *IncludedFile {
 	return &IncludedFile{
 		Name: name,
 		Path: filepath,
 		Data: data,
 
-		Resource: NewResourceIncludedFile(name, filepath),
+		Resource: NewResourceIncludedFile(filepath, name),
 	}
 }
 
@@ -33,7 +33,7 @@ type ResourceIncludedFile struct {
 
 const INCLUDEDFILE_DEFAULTPATH = DIR_DATAFILE
 
-func NewResourceIncludedFile(name, filepath string) *ResourceIncludedFile {
+func NewResourceIncludedFile(filepath, name string) *ResourceIncludedFile {
 	return &ResourceIncludedFile{
 		ResourceType:    RESTYPE_INCLUDEDFILE,
 		ResourceVersion: VERSION_INCLUDEDFILE,
@@ -108,4 +108,30 @@ func (p *Project) IncludedFileLoad(filepath, name string) (*IncludedFile, error)
 		Data:     &b,
 		Resource: resource,
 	}, nil
+}
+
+func (p *Project) IncludedFileDelete(filepath, name string) error {
+	pth := path.Join(p.Path, filepath, name)
+
+	fs, err := os.Stat(pth)
+	if err != nil {
+		return nil // Trying to delete smth that doesn't exist shouldn't be an error
+	}
+	if fs.IsDir() {
+		return fmt.Errorf("resource %s is a directory, included file cannot be a directory", pth)
+	}
+
+	err = os.Remove(pth)
+	if err != nil {
+		return fmt.Errorf("failed to delete included file: %s", err)
+	}
+
+	for i, f := range p.Data.IncludedFiles {
+		if f.Name == name && f.FilePath == filepath {
+			p.Data.IncludedFiles = append(p.Data.IncludedFiles[:i], p.Data.IncludedFiles[i+1:]...)
+			break
+		}
+	}
+
+	return nil
 }

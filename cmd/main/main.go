@@ -1,6 +1,8 @@
 package main
 
 import (
+	"image"
+
 	"github.com/ArtificialLegacy/gm-proj-tool/pkg/yyp"
 )
 
@@ -19,7 +21,12 @@ func main() {
 		panic(err)
 	}
 
-	/*sprite, err := yyp.NewSprite("GoSprite1", proj.AsParent(), yyp.ProjectTextureGroupDefaultID(), 16, 16,
+	err = proj.NoteDelete("GoNote1")
+	if err != nil {
+		panic(err)
+	}
+
+	sprite, err := yyp.NewSprite("GoSprite1", proj.AsParent(), yyp.ProjectTextureGroupDefaultID(), 16, 16,
 		[]yyp.SpriteLayer{
 			{
 				Name: yyp.SPRITELAYER_DEFAULTNAME,
@@ -36,43 +43,58 @@ func main() {
 		})
 	if err != nil {
 		panic(err)
-	}*/
+	}
 
-	sprite, err := proj.SpriteLoad("GoSprite1")
+	/*sprite, err := proj.SpriteLoad("GoSprite1")
 	if err != nil {
 		panic(err)
-	}
+	}*/
 
 	err = proj.ImportResource(sprite)
 	if err != nil {
 		panic(err)
 	}
 
-	/*script := yyp.NewScript("GoScript1", `
-	function test() {
-		// test script
-	}
-	`, proj.AsParent())*/
-
-	script, err := proj.ScriptLoad("GoScript1")
+	err = proj.SpriteDelete("GoSprite1")
 	if err != nil {
 		panic(err)
 	}
+
+	script := yyp.NewScript("GoScript1", `
+function test() {
+	// test script
+}
+	`, proj.AsParent())
+
+	/*script, err := proj.ScriptLoad("GoScript1")
+	if err != nil {
+		panic(err)
+	}*/
 
 	err = proj.ImportResource(script)
 	if err != nil {
 		panic(err)
 	}
 
-	//data := []byte("test")
-	//includedFile := yyp.NewIncludedFile("GoIncludedFile.txt", yyp.INCLUDEDFILE_DEFAULTPATH, &data)
-
-	includedFile, err := proj.IncludedFileLoad(yyp.INCLUDEDFILE_DEFAULTPATH, "GoIncludedFile.txt")
+	err = proj.ScriptDelete("GoScript1")
 	if err != nil {
 		panic(err)
 	}
 
+	data := []byte("test")
+	includedFile := yyp.NewIncludedFile(yyp.INCLUDEDFILE_DEFAULTPATH, "GoIncludedFile.txt", &data)
+
+	/*includedFile, err := proj.IncludedFileLoad(yyp.INCLUDEDFILE_DEFAULTPATH, "GoIncludedFile.txt")
+	if err != nil {
+		panic(err)
+	}*/
+
 	err = proj.IncludedFileSave(includedFile)
+	if err != nil {
+		panic(err)
+	}
+
+	err = proj.IncludedFileDelete(yyp.INCLUDEDFILE_DEFAULTPATH, "GoIncludedFile.txt")
 	if err != nil {
 		panic(err)
 	}

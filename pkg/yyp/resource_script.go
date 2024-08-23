@@ -85,6 +85,33 @@ func (p *Project) ScriptLoad(name string) (*Script, error) {
 	return script, nil
 }
 
+func (p *Project) ScriptDelete(name string) error {
+	pth := path.Join(p.Path, DIR_SCRIPT, name)
+
+	fs, err := os.Stat(pth)
+	if err != nil {
+		return nil // Trying to delete smth that doesn't exist shouldn't be an error
+	}
+	if !fs.IsDir() {
+		return fmt.Errorf("resource %s is not a directory", fs.Name())
+	}
+
+	err = os.RemoveAll(pth)
+	if err != nil {
+		return fmt.Errorf("failed to delete resource directory: %s", err)
+	}
+
+	idPath := path.Join(DIR_SCRIPT, name, name+EXT_RESOURCE)
+	for i, r := range p.Data.Resources {
+		if r.ID.Name == name && r.ID.Path == idPath {
+			p.Data.Resources = append(p.Data.Resources[:i], p.Data.Resources[i+1:]...)
+			break
+		}
+	}
+
+	return nil
+}
+
 type ResourceScript struct {
 	ResourceType    ResourceType `json:"resourceType"`
 	ResourceVersion Version      `json:"resourceVersion"`
