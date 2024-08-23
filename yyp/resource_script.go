@@ -72,6 +72,10 @@ func (p *Project) ScriptLoad(name string) (*Script, error) {
 		return nil, fmt.Errorf("resource is of incorrect type: %s, expected %s", data.ResourceType, RESTYPE_SCRIPT)
 	}
 
+	if data.IsDND {
+		return nil, fmt.Errorf("DnD scripts are not supported")
+	}
+
 	code, err := os.ReadFile(path.Join(pth, name+EXT_SCRIPT))
 	if err != nil {
 		return nil, err
