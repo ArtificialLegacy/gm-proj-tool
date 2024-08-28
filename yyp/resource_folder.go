@@ -3,6 +3,7 @@ package yyp
 import (
 	"fmt"
 	"path"
+	"strings"
 )
 
 type Folder struct {
@@ -10,10 +11,10 @@ type Folder struct {
 	Resource *ResourceFolder
 }
 
-func NewFolder(name string) *Folder {
+func NewFolder(name, folderpath string) *Folder {
 	return &Folder{
 		Name:     name,
-		Resource: NewResourceFolder(name),
+		Resource: NewResourceFolder(name, folderpath),
 	}
 }
 
@@ -22,6 +23,15 @@ func (f *Folder) AsParent() ProjectResourceNode {
 		Name: f.Resource.Name,
 		Path: f.Resource.FolderPath,
 	}
+}
+
+func (f *Folder) FolderPath() string {
+	pth := f.Resource.FolderPath
+
+	pth = strings.TrimPrefix(pth, DIR_FOLDER)
+	pth = path.Dir(pth)
+
+	return pth
 }
 
 func (p *Project) FolderSave(folder *Folder) error {
@@ -85,12 +95,12 @@ type ResourceFolder struct {
 	Tags            []string     `json:"tags,omitempty"`
 }
 
-func NewResourceFolder(name string) *ResourceFolder {
+func NewResourceFolder(name, folderpath string) *ResourceFolder {
 	return &ResourceFolder{
 		ResourceType:    RESTYPE_FOLDER,
 		ResourceVersion: VERSION_FOLDER,
 
 		Name:       name,
-		FolderPath: path.Join(DIR_FOLDER, name+EXT_RESOURCE),
+		FolderPath: path.Join(DIR_FOLDER, folderpath, name+EXT_RESOURCE),
 	}
 }
