@@ -82,6 +82,9 @@ func NewResourceSprite(name string, parent, textureGroup ProjectResourceNode, wi
 		Width:  width,
 		Height: height,
 
+		BBOX_Right:  width - 1,
+		BBOX_Bottom: height - 1,
+
 		Frames: frames,
 		Layers: resLayers,
 
