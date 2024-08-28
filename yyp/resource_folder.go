@@ -78,9 +78,9 @@ func (p *Project) FolderLoad(folderpath string) (*Folder, error) {
 	}, nil
 }
 
-func (p *Project) FolderDelete(name string) error {
+func (p *Project) FolderDelete(folderpath string) error {
 	for i, f := range p.Data.Folders {
-		if f.Name == name {
+		if f.FolderPath == folderpath {
 			p.Data.Folders = append(p.Data.Folders[:i], p.Data.Folders[i+1:]...)
 			break
 		}
