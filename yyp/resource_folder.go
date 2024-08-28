@@ -29,7 +29,7 @@ func (f *Folder) FolderPath() string {
 	pth := f.Resource.FolderPath
 
 	pth = strings.TrimPrefix(pth, DIR_FOLDER)
-	pth = path.Dir(pth)
+	pth = strings.TrimSuffix(pth, EXT_RESOURCE)
 
 	return pth
 }
