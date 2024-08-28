@@ -495,8 +495,8 @@ type ResourceNineSlice struct {
 const NINESLICECOLOR_GUIDE int = 4294902015
 const NINESLICECOLOR_HIGHLIGHT int = 1728023040
 
-func NewResourceNineSlice() ResourceNineSlice {
-	return ResourceNineSlice{
+func NewResourceNineSlice() *ResourceNineSlice {
+	return &ResourceNineSlice{
 		ResourceType:    RESTYPE_NINESLICE,
 		ResourceVersion: VERSION_NINESLICE,
 
