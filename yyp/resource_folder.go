@@ -51,17 +51,19 @@ func (p *Project) FolderSave(folder *Folder) error {
 	return nil
 }
 
-func (p *Project) FolderLoad(name string) (*Folder, error) {
+func (p *Project) FolderLoad(folderpath string) (*Folder, error) {
+	folderpath = fmt.Sprintf("%s/%s%s", DIR_FOLDER, folderpath, EXT_RESOURCE)
+
 	var resource *ResourceFolder
 	for _, f := range p.Data.Folders {
-		if f.Name == name {
+		if f.FolderPath == folderpath {
 			resource = &f
 			break
 		}
 	}
 
 	if resource == nil {
-		return nil, fmt.Errorf("could not find folder: %s", name)
+		return nil, fmt.Errorf("could not find folder: %s", folderpath)
 	}
 	if resource.ResourceVersion != VERSION_FOLDER {
 		return nil, fmt.Errorf("resource version is unsupported: %s, expected %s", resource.ResourceVersion, VERSION_FOLDER)
@@ -71,7 +73,7 @@ func (p *Project) FolderLoad(name string) (*Folder, error) {
 	}
 
 	return &Folder{
-		Name:     name,
+		Name:     resource.Name,
 		Resource: resource,
 	}, nil
 }
