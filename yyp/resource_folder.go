@@ -28,7 +28,7 @@ func (f *Folder) AsParent() ProjectResourceNode {
 func (f *Folder) FolderPath() string {
 	pth := f.Resource.FolderPath
 
-	pth = strings.TrimPrefix(pth, DIR_FOLDER)
+	pth = strings.TrimPrefix(pth, DIR_FOLDER+"/")
 	pth = strings.TrimSuffix(pth, EXT_RESOURCE)
 
 	return pth
@@ -79,6 +79,8 @@ func (p *Project) FolderLoad(folderpath string) (*Folder, error) {
 }
 
 func (p *Project) FolderDelete(folderpath string) error {
+	folderpath = fmt.Sprintf("%s/%s%s", DIR_FOLDER, folderpath, EXT_RESOURCE)
+
 	for i, f := range p.Data.Folders {
 		if f.FolderPath == folderpath {
 			p.Data.Folders = append(p.Data.Folders[:i], p.Data.Folders[i+1:]...)
