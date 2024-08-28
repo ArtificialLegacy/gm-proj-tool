@@ -720,7 +720,7 @@ type ResourceSpriteSequenceEventKeyframe struct {
 	Stretch       bool    `json:"Stretch"`
 }
 
-func NewResourceSpriteSequenceEventKeyframe(events [][]string) ResourceSpriteSequenceEventKeyframe {
+func NewResourceSpriteSequenceEventKeyframe(events [][]string, key float64) ResourceSpriteSequenceEventKeyframe {
 	channels := map[string]ResourceSpriteSequenceEventChannel{}
 
 	for i, ev := range events {
@@ -732,6 +732,9 @@ func NewResourceSpriteSequenceEventKeyframe(events [][]string) ResourceSpriteSeq
 		ResourceVersion: VERSION_KEYFRAME_MESSAGEEVENT,
 
 		Channels: channels,
+
+		Key:    key,
+		Length: 1.0,
 
 		ID: uuid.NewString(),
 	}
