@@ -51,6 +51,20 @@ func (p *Project) FolderSave(folder *Folder) error {
 	return nil
 }
 
+func (p *Project) FolderExists(folderpath string) bool {
+	folderpath = fmt.Sprintf("%s/%s%s", DIR_FOLDER, folderpath, EXT_RESOURCE)
+
+	var resource *ResourceFolder
+	for _, f := range p.Data.Folders {
+		if f.FolderPath == folderpath {
+			resource = &f
+			break
+		}
+	}
+
+	return resource != nil
+}
+
 func (p *Project) FolderLoad(folderpath string) (*Folder, error) {
 	folderpath = fmt.Sprintf("%s/%s%s", DIR_FOLDER, folderpath, EXT_RESOURCE)
 

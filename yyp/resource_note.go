@@ -58,6 +58,20 @@ func (n *Note) Save(pdir string) (string, string, *ProjectResourceNode, error) {
 	return n.Name, path.Join(DIR_NOTE, n.Name, n.Name+EXT_RESOURCE), &n.Resource.Parent, nil
 }
 
+func (p *Project) NoteExists(name string) bool {
+	pth := path.Join(p.Path, DIR_NOTE, name)
+
+	fs, err := os.Stat(pth)
+	if err != nil {
+		return false
+	}
+	if !fs.IsDir() {
+		return false
+	}
+
+	return true
+}
+
 func (p *Project) NoteLoad(name string) (*Note, error) {
 	pth := path.Join(p.Path, DIR_NOTE, name)
 

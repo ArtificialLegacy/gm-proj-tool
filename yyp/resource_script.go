@@ -48,6 +48,20 @@ func (n *Script) Save(pdir string) (string, string, *ProjectResourceNode, error)
 	return n.Name, path.Join(DIR_SCRIPT, n.Name, n.Name+EXT_RESOURCE), &n.Resource.Parent, nil
 }
 
+func (p *Project) ScriptExists(name string) bool {
+	pth := path.Join(p.Path, DIR_SCRIPT, name)
+
+	fs, err := os.Stat(pth)
+	if err != nil {
+		return false
+	}
+	if !fs.IsDir() {
+		return false
+	}
+
+	return true
+}
+
 func (p *Project) ScriptLoad(name string) (*Script, error) {
 	pth := path.Join(p.Path, DIR_SCRIPT, name)
 

@@ -77,6 +77,18 @@ func (p *Project) IncludedFileSave(file *IncludedFile) error {
 	return nil
 }
 
+func (p *Project) IncludedFileExists(filepath, name string) bool {
+	var resource *ResourceIncludedFile
+	for _, f := range p.Data.IncludedFiles {
+		if f.Name == name && f.FilePath == filepath {
+			resource = &f
+			break
+		}
+	}
+
+	return resource != nil
+}
+
 func (p *Project) IncludedFileLoad(filepath, name string) (*IncludedFile, error) {
 	var resource *ResourceIncludedFile
 	for _, f := range p.Data.IncludedFiles {

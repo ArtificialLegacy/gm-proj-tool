@@ -219,6 +219,20 @@ func flattenLayers(layers []SpriteLayer, resourceLayers []ResourceImageLayer) ([
 	return out, names
 }
 
+func (p *Project) SpriteExists(name string) bool {
+	pth := path.Join(p.Path, DIR_SPRITE, name)
+
+	fs, err := os.Stat(pth)
+	if err != nil {
+		return false
+	}
+	if !fs.IsDir() {
+		return false
+	}
+
+	return true
+}
+
 func (p *Project) SpriteLoad(name string) (*Sprite, error) {
 	pth := path.Join(p.Path, DIR_SPRITE, name)
 
