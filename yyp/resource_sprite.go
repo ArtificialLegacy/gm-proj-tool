@@ -286,14 +286,14 @@ func verifyLayers(layer ResourceImageLayer, layerList *[]SpriteLayer, pth string
 			Layers: []SpriteLayer{},
 		}
 
-		*layerList = append(*layerList, folderLayer)
-
 		for _, l := range layer.Layers {
 			err := verifyLayers(l, &folderLayer.Layers, pth, frames)
 			if err != nil {
 				return err
 			}
 		}
+
+		*layerList = append(*layerList, folderLayer)
 
 		return nil
 	}
