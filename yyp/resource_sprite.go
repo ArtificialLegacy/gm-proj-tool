@@ -282,7 +282,7 @@ func verifyLayers(layer ResourceImageLayer, layerList *[]SpriteLayer, pth string
 		}
 
 		folderLayer := SpriteLayer{
-			Name:   layer.DislayName,
+			Name:   layer.DisplayName,
 			Layers: []SpriteLayer{},
 		}
 
@@ -306,7 +306,7 @@ func verifyLayers(layer ResourceImageLayer, layerList *[]SpriteLayer, pth string
 	}
 
 	layerFrame := SpriteLayer{
-		Name:   layer.DislayName,
+		Name:   layer.DisplayName,
 		Frames: make([]*image.NRGBA, len(frames)),
 	}
 
@@ -437,12 +437,12 @@ type ResourceImageLayer struct {
 	ResourceVersion Version      `json:"resourceVersion"`
 	Name            string       `json:"name"`
 
-	BlendMode  BlendMode            `json:"blendMode"`
-	DislayName string               `json:"dislayName"`
-	IsLocked   bool                 `json:"isLocked"`
-	Opacity    float64              `json:"opacity"`
-	Visible    bool                 `json:"visible"`
-	Layers     []ResourceImageLayer `json:"layers,omitempty"`
+	BlendMode   BlendMode            `json:"blendMode"`
+	DisplayName string               `json:"displayName"`
+	IsLocked    bool                 `json:"isLocked"`
+	Opacity     float64              `json:"opacity"`
+	Visible     bool                 `json:"visible"`
+	Layers      []ResourceImageLayer `json:"layers,omitempty"`
 }
 
 const SPRITELAYER_DEFAULTNAME = "default"
@@ -452,7 +452,7 @@ func NewResourceImageLayer(name string) ResourceImageLayer {
 		ResourceType:    RESTYPE_IMAGELAYER,
 		ResourceVersion: VERSION_IMAGELAYER,
 
-		DislayName: name,
+		DisplayName: name,
 
 		Name:    uuid.NewString(),
 		Opacity: 100.0,
@@ -465,8 +465,8 @@ func NewResourceImageLayerFolder(name string, layers []ResourceImageLayer) Resou
 		ResourceType:    RESTYPE_IMAGEFOLDERLAYER,
 		ResourceVersion: VERSION_IMAGEFOLDER,
 
-		DislayName: name,
-		Layers:     layers,
+		DisplayName: name,
+		Layers:      layers,
 
 		Name:    uuid.NewString(),
 		Opacity: 100.0,
