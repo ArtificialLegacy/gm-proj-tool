@@ -282,7 +282,7 @@ func verifyLayers(layer ResourceImageLayer, layerList *[]SpriteLayer, pth string
 		}
 
 		folderLayer := SpriteLayer{
-			Name:   layer.Name,
+			Name:   layer.DislayName,
 			Layers: []SpriteLayer{},
 		}
 
@@ -306,7 +306,7 @@ func verifyLayers(layer ResourceImageLayer, layerList *[]SpriteLayer, pth string
 	}
 
 	layerFrame := SpriteLayer{
-		Name:   layer.Name,
+		Name:   layer.DislayName,
 		Frames: make([]*image.NRGBA, len(frames)),
 	}
 
