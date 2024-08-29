@@ -428,7 +428,7 @@ type ResourceSprite struct {
 
 	TexGroupID ProjectResourceNode `json:"textureGroupId"`
 
-	Tags []string `json:"tag,omitempty"`
+	Tags []string `json:"tags,omitempty"`
 }
 
 type ResourceSpriteFrame struct {
